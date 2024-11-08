@@ -92,7 +92,6 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      previousTab: {previousTab}; activeTab: {activeTab};
       <Header
         items={menuItems}
         activeTab={activeTab}
