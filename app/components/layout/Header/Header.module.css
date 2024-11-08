@@ -1,0 +1,97 @@
+/* CSS do title */
+
+.headerForehead {
+  height: 25vh;
+  transition: height 1s ease-out, opacity 1s ease;
+}
+
+.headerForeheadCollapsed {
+  height: 0;
+}
+
+.header {
+  background-color: white;
+  padding: 8px 0 0 0;
+  position: sticky;
+  top: 0;
+  border-bottom: 2px solid #000;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: bold;
+  cursor: default;
+}
+
+.headerContent {
+  background-color: #fff;
+  padding: 10px;
+  display: flex;
+  width: 100%;
+  display: flex;
+  align-items: end;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 2px solid #000;
+}
+
+.randomImageContainer img {
+  margin-left: 30px;
+  margin-bottom: -10px;
+}
+
+/* Css do menu */
+
+.menu {
+  background-color: white;
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+}
+
+.menu li {
+  margin: 15px 0px;
+}
+
+.menuItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.menu a {
+  text-decoration: none;
+  color: gray;
+  font-size: 18px;
+  position: relative;
+  transition: color 0.5s ease;
+  white-space: nowrap;
+}
+
+.menu a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  background: #000;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  transition: width 0.5s ease;
+}
+
+.menu a:hover {
+  color: #000;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+.menu a.active {
+  color: #000; /* Cor ativa */
+}
+
+.menu a.active::after {
+  width: 100%; /* Linha permanece quando o link está ativo */
+}

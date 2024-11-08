@@ -1,0 +1,23 @@
+.projetos {
+  padding: 10px 20px;
+  display: block;
+  gap: 20px;
+}
+
+.projetos h2 {
+  max-width: 100%;
+  padding: 10px 0 10px 0;
+  font-size: 18px;
+}
+
+.emBreve {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 10px 0 0 0;
+}
+
+.figuraEmBreve {
+  width: 250px;
+  height: auto;
+}

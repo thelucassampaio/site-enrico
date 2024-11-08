@@ -1,0 +1,30 @@
+/* Style da página "Publicações" */
+
+.publications {
+  max-width: 100%;
+  padding: 10px 20px;
+  display: block;
+}
+
+.publications h2 {
+  max-width: 100%;
+  padding: 0px 0 10px 0;
+  font-size: 16px;
+}
+
+.publications p {
+  line-height: 1.4;
+  font-size: 15px;
+  text-align: justify;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.publications a {
+  color: black;
+  text-decoration: none;
+}
+
+.publications a:hover {
+  color: purple;
+}

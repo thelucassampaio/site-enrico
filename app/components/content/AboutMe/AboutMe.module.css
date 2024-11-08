@@ -1,0 +1,18 @@
+.aboutMe {
+  padding: 10px 20px;
+  display: block;
+  gap: 20px;
+}
+
+.aboutMe1 {
+  max-width: 100%;
+  padding: 10px 0 0 0;
+  font-size: 18px;
+}
+
+.aboutMeText {
+  line-height: 1.4;
+  font-size: 15px;
+  text-align: justify;
+  hyphens: auto; /* Permite a hifenização automática se a palavra for muito longa */
+}

@@ -1,0 +1,125 @@
+.footer {
+  position: sticky;
+  bottom: 0; /* Posiciona o footer sempre no fundo da tela */
+  background-color: #fff; /* Cor de fundo, ajuste conforme necessário */
+  padding: 0 0 50px 0;
+  z-index: 10; /* Garante que o footer fique acima de outros elementos */
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  transition: height 0s 1s;
+}
+
+.barra::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  transition: height 1s ease-out;
+}
+
+.footerContent {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.contatos {
+  text-align: left;
+}
+
+.contatos a {
+  margin: 10px 85px 10px 10px;
+  text-decoration: none;
+  color: gray;
+  font-size: 12px;
+  position: relative;
+  transition: color 0.5s ease;
+  white-space: nowrap;
+}
+
+.contatos a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  background: #000;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  transition: width 0.5s ease;
+}
+
+.contatos a:hover {
+  color: #000;
+}
+
+.contatos a:hover::after {
+  width: 100%; /* A linha aparece ao passar o mouse */
+}
+
+.contatos a.active {
+  color: black;
+}
+
+.contatos a.active::after {
+  width: 100%; /* Linha permanece quando o link está ativo */
+}
+
+.contatosIcones {
+  align-items: center;
+  justify-content: space-between;
+  color: gray;
+  font-style: none;
+}
+
+.contatosIcones a {
+  text-decoration: none;
+  padding: 0 3px 0 2px;
+}
+
+/* j {
+  font-size: 22px;
+  text-decoration: none;
+  color: #808080;
+}
+
+j:hover {
+  color: #a9a9a9;
+} */
+
+.iconeEmail {
+  width: 32px; /* Largura da imagem */
+  height: auto; /* Mantém a proporção */
+  filter: invert(61%) sepia(1%) saturate(0%) hue-rotate(144deg) brightness(82%)
+    contrast(92%);
+  transition: transform 0.3s ease; /* Transição suave ao passar o mouse */
+  padding-left: 10px;
+}
+
+.iconeEmail:hover {
+  filter: invert(78%) sepia(10%) saturate(18%) hue-rotate(359deg)
+    brightness(87%) contrast(87%);
+}
+
+.contatosIcones a:hover {
+  color: darkgray;
+}
+
+.attEm {
+  padding: 10px;
+  color: gray;
+  font-size: 12px;
+  text-align: right;
+  cursor: default;
+}
