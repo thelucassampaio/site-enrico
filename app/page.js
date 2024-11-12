@@ -17,7 +17,7 @@ const menuItems = [
   { title: "Etcetera", id: "etcetera" },
 ];
 
-export const transitionDuration = 0.5; // Change desired transition duration here
+const transitionDuration = 0.5; // Change desired transition duration here
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
