@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import AboutMe from "./components/content/AboutMe/AboutMe";
 import Footer from "./components/layout/Footer/Footer";
@@ -17,61 +18,23 @@ const menuItems = [
   { title: "Etcetera", id: "etcetera" },
 ];
 
-const transitionDuration = 0.5; // Change desired transition duration here
+const transitionDuration = 0.5; // Duration of animations in seconds
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasContent, setHasContent] = useState(false);
-  const mainContentRef = useRef(null);
 
   const handleTabClick = (id) => {
-    if (isTransitioning) return; // Prevent overlapping transitions
+    setActiveTab(id === activeTab ? null : id);
+  };
 
-    if (!mainContentRef.current) {
-      setActiveTab(id);
-      setHasContent(true);
-      return; // Exit early to prevent height manipulations
-    }
+  useEffect(() => {
+    setHasContent(activeTab ? true : false);
+  }, [activeTab]);
 
-    setIsTransitioning(true);
-
-    // Start collapsing the main content
-    if (mainContentRef.current) {
-      mainContentRef.current.style.height = mainContentRef.current.scrollHeight
-        ? `${mainContentRef.current.scrollHeight}px`
-        : "70svh"; // On the first render scrollHeight doesn't exist, so 70% of the small viewport height is the default
-      mainContentRef.current.style.transition = `height ${transitionDuration}s ease`;
-      requestAnimationFrame(() => {
-        mainContentRef.current.style.height = "0px";
-      });
-    }
-
-    // Wait for the collapse transition to complete before changing the tab
-    setTimeout(() => {
-      setActiveTab(id === activeTab ? null : id);
-
-      // Start expanding the main content
-      if (mainContentRef.current) {
-        mainContentRef.current.style.height = "0px"; // Ensure height starts at 0
-        requestAnimationFrame(() => {
-          mainContentRef.current.style.transition = `height ${transitionDuration}s ease`;
-          const newHeight =
-            mainContentRef.current.scrollHeight || id === activeTab
-              ? `${mainContentRef.current.scrollHeight}px`
-              : "70svh";
-
-          mainContentRef.current.style.height = newHeight;
-
-          setHasContent(newHeight !== "0px");
-        });
-      }
-
-      // Wait for the expansion to finish
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, transitionDuration * 1000);
-    }, transitionDuration * 1000);
+  const variants = {
+    hidden: { height: 0, opacity: 0 },
+    visible: { height: "auto", opacity: 1 },
   };
 
   return (
@@ -82,12 +45,52 @@ export default function Home() {
         handleTabClick={handleTabClick}
       />
       <main>
-        <div className={styles.mainContent} ref={mainContentRef}>
-          {activeTab === "aboutMe" && <AboutMe />}
-          {activeTab === "publications" && <Publications />}
-          {/* {activeTab === "projects" && <Projects />} */}
-          {/* Add other contents as necessary */}
-        </div>
+        <motion.div
+          className={styles.mainContent}
+          initial="hidden"
+          animate={activeTab ? "visible" : "hidden"}
+          variants={variants}
+          transition={{ duration: transitionDuration, ease: "easeInOut" }}
+        >
+          <AnimatePresence mode="wait">
+            {activeTab === "aboutMe" && (
+              <motion.div
+                key="aboutMe"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={variants}
+                transition={{ duration: transitionDuration }}
+              >
+                <AboutMe />
+              </motion.div>
+            )}
+            {activeTab === "publications" && (
+              <motion.div
+                key="publications"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={variants}
+                transition={{ duration: transitionDuration }}
+              >
+                <Publications />
+              </motion.div>
+            )}
+            {/* {activeTab === "projects" && (
+              <motion.div
+                key="projects"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={variants}
+                transition={{ duration: transitionDuration }}
+              >
+                <Projects />
+              </motion.div>
+            )} */}
+          </AnimatePresence>
+        </motion.div>
         <Footer hasContent={hasContent} />
       </main>
     </div>
