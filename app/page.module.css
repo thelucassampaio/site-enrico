@@ -1,13 +1,8 @@
 .mainContent {
   overflow: hidden;
-  transition: height 2s ease;
+  transition: height 1s ease;
   height: 0;
   border-bottom: none;
-}
-
-.active {
-  height: auto; /* Necessário para ajustar a altura conforme o conteúdo */
-  border-bottom: 2px solid #000;
 }
 
 /* Style da página "et cetera" */

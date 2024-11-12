@@ -1,13 +1,14 @@
 "use client";
 
-import styles from "./page.module.css";
-import Header from "./components/layout/Header/Header";
-import Footer from "./components/layout/Footer/Footer";
-import AboutMe from "./components/content/AboutMe/AboutMe";
-import Publications from "./components/content/Publications/Publications";
-import Projects from "./components/content/Projects/Projects";
+import { useState, useRef } from "react";
 
-import { useState, useEffect, useRef } from "react";
+import AboutMe from "./components/content/AboutMe/AboutMe";
+import Footer from "./components/layout/Footer/Footer";
+import Header from "./components/layout/Header/Header";
+import Publications from "./components/content/Publications/Publications";
+// import Projects from "./components/content/Projects/Projects";
+
+import styles from "./page.module.css";
 
 const menuItems = [
   { title: "Sobre mim", id: "aboutMe" },
@@ -16,79 +17,62 @@ const menuItems = [
   { title: "Etcetera", id: "etcetera" },
 ];
 
+export const transitionDuration = 0.5; // Change desired transition duration here
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
-  const [currentTab, setCurrentTab] = useState(null);
-  const [previousTab, setPreviousTab] = useState(null);
-  const contentRef = useRef(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
+  const mainContentRef = useRef(null);
 
   const handleTabClick = (id) => {
-    setPreviousTab(activeTab);
-    setCurrentTab(id === activeTab ? null : id);
-  };
+    if (isTransitioning) return; // Prevent overlapping transitions
 
-  useEffect(() => {
-    if (contentRef.current) {
-      const contentElement = contentRef.current;
-
-      // Função para iniciar a animação de abertura
-      const animateOpen = () => {
-        const height = contentElement.scrollHeight;
-        contentElement.style.height = "0px"; // Inicia com altura zero
-        contentElement.style.overflow = "hidden";
-        contentElement.style.transition = "height 1s ease";
-
-        // Aguarda um frame para iniciar a animação de abertura
-        requestAnimationFrame(() => {
-          contentElement.style.height = `${height}px`;
-          contentElement.style.opacity = "1";
-        });
-
-        // Remove a altura após a transição para ajuste automático
-        const handleTransitionEnd = () => {
-          contentElement.style.height = "auto";
-        };
-        contentElement.addEventListener("transitionend", handleTransitionEnd);
-
-        return () =>
-          contentElement.removeEventListener(
-            "transitionend",
-            handleTransitionEnd
-          );
-      };
-
-      // Função para iniciar a animação de fechamento
-      const animateClose = () => {
-        const height = contentElement.scrollHeight;
-        contentElement.style.height = `${height}px`; // Define a altura atual
-        contentElement.style.transition = "height 1s ease";
-
-        // Aguarda um frame e define a altura para zero para iniciar a animação de fechamento
-        requestAnimationFrame(() => {
-          contentElement.style.height = "0px";
-          contentElement.style.opacity = "0";
-        });
-      };
-
-      // Se existe uma aba ativa e o conteúdo está sendo mudado
-      if (previousTab && previousTab !== activeTab) {
-        animateClose(); // Inicia a animação de fechamento
-        // Aguarda a duração do fechamento antes de abrir a nova aba
-        setTimeout(() => {
-          animateOpen();
-        }, 1000); // Aguarda 1 segundo para completar a animação de fechamento
-
-        setTimeout(() => {
-          setActiveTab(currentTab);
-        }, 0); // Aguarda 1 segundo para completar a animação de fechamento
-      } else {
-        animateOpen();
-        setTimeout(() => {
-          setActiveTab(currentTab);
-        }, 0);
-      }
+    if (!mainContentRef.current) {
+      setActiveTab(id);
+      setHasContent(true);
+      return; // Exit early to prevent height manipulations
     }
-  }, [currentTab, previousTab]); // Reexecuta sempre que a aba ativa ou anterior muda
+
+    setIsTransitioning(true);
+
+    // Start collapsing the main content
+    if (mainContentRef.current) {
+      mainContentRef.current.style.height = mainContentRef.current.scrollHeight
+        ? `${mainContentRef.current.scrollHeight}px`
+        : "70svh"; // On the first render scrollHeight doesn't exist, so 70% of the small viewport height is the default
+      mainContentRef.current.style.transition = `height ${transitionDuration}s ease`;
+      requestAnimationFrame(() => {
+        mainContentRef.current.style.height = "0px";
+      });
+    }
+
+    // Wait for the collapse transition to complete before changing the tab
+    setTimeout(() => {
+      setActiveTab(id === activeTab ? null : id);
+
+      // Start expanding the main content
+      if (mainContentRef.current) {
+        mainContentRef.current.style.height = "0px"; // Ensure height starts at 0
+        requestAnimationFrame(() => {
+          mainContentRef.current.style.transition = `height ${transitionDuration}s ease`;
+          const newHeight =
+            mainContentRef.current.scrollHeight || id === activeTab
+              ? `${mainContentRef.current.scrollHeight}px`
+              : "70svh";
+
+          mainContentRef.current.style.height = newHeight;
+
+          setHasContent(newHeight !== "0px");
+        });
+      }
+
+      // Wait for the expansion to finish
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, transitionDuration * 1000);
+    }, transitionDuration * 1000);
+  };
 
   return (
     <div className={styles.page}>
@@ -98,13 +82,13 @@ export default function Home() {
         handleTabClick={handleTabClick}
       />
       <main>
-        <div ref={contentRef} className={styles.mainContent}>
+        <div className={styles.mainContent} ref={mainContentRef}>
           {activeTab === "aboutMe" && <AboutMe />}
           {activeTab === "publications" && <Publications />}
           {/* {activeTab === "projects" && <Projects />} */}
-          {/* Adicione outros conteúdos conforme necessário */}
+          {/* Add other contents as necessary */}
         </div>
-        <Footer />
+        <Footer hasContent={hasContent} />
       </main>
     </div>
   );

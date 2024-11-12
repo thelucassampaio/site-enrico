@@ -52,7 +52,9 @@ function Title() {
           src="/archive/icons/imagem.jpeg"
           width={60}
           height={60}
-          alt="bla"
+          alt="Desenho de um rosto"
+          aria-hidden={true}
+          priority
         />
       </div>
     </div>
